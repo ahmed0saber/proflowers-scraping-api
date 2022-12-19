@@ -5,6 +5,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
+var fs = require('fs');
 
 app.listen(process.env.PORT, () =>
     console.log(`Example app listening on port ${process.env.PORT}!`),
@@ -19,21 +20,21 @@ app.get('/projects', (req, res) => {
 })
 
 app.get('/all', async (req, res) => {
-    const currentData = await getDataFromProFlowers()
+    const currentData = await getFlowersData()
     const modifiedData = Object.values(currentData)
 
     return res.json(modifiedData)
 })
 
 app.get('/flower/:index', async (req, res) => {
-    const currentData = await getDataFromProFlowers()
+    const currentData = await getFlowersData()
     const modifiedData = currentData[req.params.index]
 
     return res.json(modifiedData)
 })
 
 app.get('/flowers/:indexes', async (req, res) => {
-    const currentData = await getDataFromProFlowers()
+    const currentData = await getFlowersData()
     const indexesAsString = req.params.indexes
     const indexesAsArray = indexesAsString.split(",")
     const modifiedData = indexesAsArray.map(index => currentData[index])
@@ -41,7 +42,15 @@ app.get('/flowers/:indexes', async (req, res) => {
     return res.json(modifiedData)
 })
 
-async function getDataFromProFlowers() {
+async function getFlowersData() {
+    const scrapedDataPromise = getScrapedData()
+    const storedDataPromise = getCachedData()
+    const data = await Promise.race([scrapedDataPromise, storedDataPromise])
+
+    return data
+}
+
+async function getScrapedData() {
     const browser = await puppeteer.launch({})
     const page = await browser.newPage()
     const data = {}
@@ -62,5 +71,34 @@ async function getDataFromProFlowers() {
     }
 
     browser.close()
+    updateCachedData(data)
+
     return data
+}
+
+async function getCachedData() {
+    let storedData, parsedData
+    try {
+        storedData = fs.readFileSync('data.json')
+        parsedData = JSON.parse(storedData)
+    }
+    catch (err) {
+        console.log("CACHE NOT FOUND")
+    }
+
+    let currentPromise
+    if (parsedData == undefined) {
+        currentPromise = new Promise((resolve, reject) => reject)
+    } else {
+        currentPromise = new Promise((resolve, reject) => resolve(parsedData))
+    }
+    const data = await currentPromise
+
+    return data
+}
+
+function updateCachedData(data) {
+    fs.writeFile('data.json', JSON.stringify(data), function (err) {
+        if (err) throw err
+    })
 }
