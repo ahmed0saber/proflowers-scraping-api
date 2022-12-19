@@ -1,10 +1,12 @@
 const express = require("express")
 const app = express()
+var cors = require('cors')
 const puppeteer = require('puppeteer')
 const dotenv = require('dotenv')
 dotenv.config()
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
+app.use(cors())
 var fs = require('fs');
 
 app.listen(process.env.PORT, () =>
