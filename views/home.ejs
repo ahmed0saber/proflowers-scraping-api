@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Home | Flowers API</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Glory&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='./style.css'>
+</head>
+
+<body>
+    <header>
+        <h3>Flowers API</h3>
+        <div>
+            <a href="/" class="active">Home</a>
+            <a href="/projects">Projects</a>
+        </div>
+    </header>
+    <main>
+        <h1>Flowers API</h1>
+        <p>Flowers API scrapes its data from <a class="link" target="_blank"
+                href="https://www.proflowers.com/blog/types-of-flowers/">ProFlowers</a>, this API has been created by <a
+                class="link" target="_blank" href="https://www.linkedin.com/in/ahmed0saber/">ahmed0saber</a>, click the
+            below button to view projects created with the help of Flowers API.</p>
+        <a class="btn" href="/projects">View Projects</a>
+    </main>
+    <span class="separator"></span>
+    <section>
+        <h2>Usage</h2>
+        <p>To get data of all flowers, send a <span>GET</span> request to <span>/all</span> endpoint.</p>
+        <p>To get data of a certain flower, send a <span>GET</span> request to <span>/flower/1</span> endpoint, as 1 is
+            the index of flower.</p>
+        <p>To get data of certain number of flowers, send a <span>GET</span> request to <span>/flowers/1,5,7</span>
+            endpoint, as 1, 5 and 7 are indexes of these flowers.</p>
+    </section>
+</body>
+
+</html>
